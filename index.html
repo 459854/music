@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Music Player</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0c0c0c;
+            color: #e0e0e0;
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5a5a5a;
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-200 antialiased h-screen flex flex-col">
+
+    <!-- Main Container -->
+    <div class="flex-grow flex p-2 md:p-4 gap-2 md:gap-4 overflow-hidden">
+
+        <!-- Left Sidebar (Navigation) -->
+        <aside class="w-1/4 md:w-1/5 bg-gray-900 rounded-xl p-4 flex-shrink-0 flex flex-col space-y-4 shadow-xl">
+            <h1 class="text-2xl font-bold text-white mb-4">🎵 Groove</h1>
+            <nav class="flex-grow space-y-2">
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg text-white font-medium bg-gray-800 transition-all duration-200 hover:bg-gray-700">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 font-medium transition-all duration-200 hover:bg-gray-800 hover:text-white">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                    <span>Search</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 font-medium transition-all duration-200 hover:bg-gray-800 hover:text-white">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zm-1-10h2v6h-2z"/>
+                    </svg>
+                    <span>Your Library</span>
+                </a>
+            </nav>
+            <div class="mt-auto space-y-2">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-2">Playlists</h3>
+                <div id="playlists" class="space-y-2 text-sm">
+                    <a href="#" class="block text-gray-400 hover:text-white transition-colors duration-200">Chill Vibes</a>
+                    <a href="#" class="block text-gray-400 hover:text-white transition-colors duration-200">Workout Mix</a>
+                    <a href="#" class="block text-gray-400 hover:text-white transition-colors duration-200">Coding Flow</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow bg-gray-900 rounded-xl p-6 md:p-8 overflow-y-auto shadow-xl">
+            <h2 class="text-3xl font-bold mb-6 text-white">Good afternoon</h2>
+            
+            <!-- Recently Played Section -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Recently Played</h3>
+                <div id="recently-played" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                    <!-- Cards will be injected here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- More Albums Section -->
+            <div>
+                <h3 class="text-xl font-semibold mb-4">More Albums</h3>
+                <div id="more-albums" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards will be injected here by JavaScript -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Bottom Player Control Bar -->
+    <div class="bg-gray-900 h-24 md:h-28 flex-shrink-0 flex items-center justify-between px-4 md:px-8 shadow-2xl">
+        <!-- Current Song Info -->
+        <div class="flex items-center space-x-4 w-1/4">
+            <img id="current-song-img" src="https://placehold.co/64x64/2a2a2a/ffffff?text=Album" class="w-12 h-12 rounded-lg shadow-md" alt="Album Art">
+            <div class="flex-col hidden sm:flex">
+                <span id="current-song-title" class="font-semibold text-sm md:text-base text-white">Song Title</span>
+                <span id="current-song-artist" class="text-xs md:text-sm text-gray-400">Artist Name</span>
+            </div>
+        </div>
+
+        <!-- Player Controls -->
+        <div class="flex flex-col items-center w-1/2">
+            <div class="flex items-center space-x-6 mb-2">
+                <button class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                </button>
+                <button id="play-pause-btn" class="bg-white text-gray-900 p-3 rounded-full shadow-lg transition-transform transform hover:scale-105">
+                    <svg id="play-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M16 6v12h2V6zM6 18l8.5-6L6 6z"/></svg>
+                </button>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full flex items-center space-x-2">
+                <span class="text-xs text-gray-400">0:00</span>
+                <div class="relative w-full h-1 bg-gray-700 rounded-full">
+                    <div id="progress-bar" class="absolute h-1 bg-green-500 rounded-full" style="width: 0%;"></div>
+                </div>
+                <span id="duration" class="text-xs text-gray-400">3:45</span>
+            </div>
+        </div>
+        
+        <!-- Volume Control and other icons -->
+        <div class="flex items-center justify-end space-x-4 w-1/4">
+             <button class="text-gray-400 hover:text-white transition-colors hidden md:block">
+                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55a4.992 4.992 0 0 1-5 4.5c-2.48 0-4.5-2.02-4.5-4.5S4.52 7 7 7s5 2.02 5 4.5V17c0 1.66 1.34 3 3 3s3-1.34 3-3V8h3V3h-9z"/></svg>
+             </button>
+             <button class="text-gray-400 hover:text-white transition-colors">
+                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm-2-12h4v2h-4zm0 4h4v2h-4zm0 4h4v2h-4z"/></svg>
+             </button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+            const progressBar = document.getElementById('progress-bar');
+            const currentSongTitle = document.getElementById('current-song-title');
+            const currentSongArtist = document.getElementById('current-song-artist');
+            const currentSongImg = document.getElementById('current-song-img');
+            
+            let isPlaying = false;
+            let progress = 0;
+            let intervalId = null;
+
+            // Placeholder song data
+            const songs = [
+                { title: 'The World is a Stage', artist: 'Neon Horizon', img: 'https://placehold.co/100x100/1a1a1a/ffffff?text=NW' },
+                { title: 'Cyberpunk City', artist: 'Synthwave Dreams', img: 'https://placehold.co/100x100/2a2a2a/ffffff?text=CC' },
+                { title: 'Cosmic Drift', artist: 'Starlight Drive', img: 'https://placehold.co/100x100/3a3a3a/ffffff?text=CD' },
+                { title: 'Electric Skyline', artist: 'Circuit Breaker', img: 'https://placehold.co/100x100/4a4a4a/ffffff?text=ES' },
+                { title: 'Moonlight Serenade', artist: 'Lunar Echoes', img: 'https://placehold.co/100x100/5a5a5a/ffffff?text=MS' },
+                { title: 'Solar Flare', artist: 'Andromeda', img: 'https://placehold.co/100x100/6a6a6a/ffffff?text=SF' }
+            ];
+
+            // Render recently played and more albums
+            function renderAlbums() {
+                const recentlyPlayedContainer = document.getElementById('recently-played');
+                const moreAlbumsContainer = document.getElementById('more-albums');
+                
+                // Recently Played (first 5 songs)
+                songs.slice(0, 5).forEach(song => {
+                    recentlyPlayedContainer.innerHTML += `
+                        <div class="bg-gray-800 rounded-lg p-3 cursor-pointer transition-all duration-200 hover:bg-gray-700 shadow-md transform hover:scale-105" onclick="playMusic('${song.title}', '${song.artist}', '${song.img}')">
+                            <img src="${song.img}" class="w-full h-auto rounded-md mb-2 shadow-lg" alt="${song.title}">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center p-2 shadow-md hover:bg-green-400">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                                <div class="truncate">
+                                    <div class="text-sm font-semibold truncate text-white">${song.title}</div>
+                                    <div class="text-xs text-gray-400 truncate">${song.artist}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // More Albums (all songs)
+                songs.forEach(song => {
+                    moreAlbumsContainer.innerHTML += `
+                        <div class="flex items-center space-x-4 bg-gray-800 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:bg-gray-700 shadow-md" onclick="playMusic('${song.title}', '${song.artist}', '${song.img}')">
+                            <img src="${song.img}" class="w-16 h-16 rounded-lg shadow-md" alt="${song.title}">
+                            <div class="flex-grow">
+                                <div class="text-lg font-semibold text-white">${song.title}</div>
+                                <div class="text-sm text-gray-400">${song.artist}</div>
+                            </div>
+                            <button class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center p-3 shadow-lg hover:bg-green-400">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+
+            // Global function to be called from album cards
+            window.playMusic = function(title, artist, img) {
+                currentSongTitle.textContent = title;
+                currentSongArtist.textContent = artist;
+                currentSongImg.src = img;
+                
+                // Reset progress and start playing
+                if (!isPlaying) {
+                    togglePlayPause();
+                }
+                progress = 0;
+                progressBar.style.width = '0%';
+            }
+
+            function updateProgressBar() {
+                if (isPlaying) {
+                    progress = (progress + 0.1) % 100; // Increment progress
+                    progressBar.style.width = progress + '%';
+                }
+            }
+
+            function togglePlayPause() {
+                isPlaying = !isPlaying;
+                if (isPlaying) {
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    intervalId = setInterval(updateProgressBar, 100);
+                } else {
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                    clearInterval(intervalId);
+                }
+            }
+
+            playPauseBtn.addEventListener('click', togglePlayPause);
+
+            renderAlbums();
+        });
+    </script>
+</body>
+</html>
